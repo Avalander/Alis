@@ -2,15 +2,9 @@ package alis
 
 import scala.util.{Try, Success, Failure}
 
-object Reader {
-  sealed trait Token
-  case class Atom(value: String) extends Token
-  case class StringToken(value: String) extends Token
-  case class NumberToken(value: Double) extends Token
-  case class BooleanToken(value: Boolean) extends Token
-  case class ListToken(value: List[Token]) extends Token
-  case class LitListToken(value: List[Token]) extends Token
+import token._
 
+object Reader {
   def tokenize (raw: String): Seq[Token] =
     readStr(raw.toList)
 

@@ -2,20 +2,12 @@ package alis
 
 import org.scalatest._
 
+import token._
 import Reader._
 
-class ReaderTest extends FunSuite {
-  trait Program {
-    val function = "(defn add (a b) (+ a b))"
-    val program = """(defn loop ((n 1))
-    |  (if (> n 10)
-    |    '()
-    |    (cons n
-    |    (loop (+ n 1)))))
-    """.stripMargin
-    val concat = """(defn greet (name) (+ "hello, \"" name "\""))"""
-  }
+import fixtures._
 
+class ReaderTest extends FunSuite {
   test("tokenize parses a simple function") {
     new Program {
       assert(tokenize(function) == List(
