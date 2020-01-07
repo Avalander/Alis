@@ -16,28 +16,12 @@ class ReaderTest extends FunSuite {
     val concat = """(defn greet (name) (+ "hello, \"" name "\""))"""
   }
 
-  // test("readStr parses a simple function") {
-  //   new Program {
-  //     assert(readStr(function) == List("(", "defn", "add", "(", "a", "b", ")", "(", "+", "a", "b", ")", ")"))
-  //   }
-  // }
-
-  // test("readStr parses a multiline function") {
-  //   new Program {
-  //     assert(readStr(program) == List(
-  //       "(", "defn", "loop", "(", "(", "n", "1", ")", ")",
-  //       "(", "if", "(", ">", "n", "10", ")",
-  //       "'(", ")",
-  //       "(", "cons", "n",
-  //       "(", "loop", "(", "+", "n", "1", ")", ")", ")", ")", ")"
-  //     ))
-  //   }
-  // }
-
   test("tokenize parses a simple function") {
     new Program {
       assert(tokenize(function) == List(
-        OpenParens, Atom("defn"), Atom("add"), OpenParens, Atom("a"), Atom("b"), CloseParens, OpenParens, Atom("+"), Atom("a"), Atom("b"), CloseParens, CloseParens
+        ListToken(
+          List(Atom("defn"), Atom("add"), ListToken(List(Atom("a"), Atom("b"))), ListToken(List(Atom("+"), Atom("a"), Atom("b"))))
+        )
       ))
     }
   }
@@ -45,19 +29,57 @@ class ReaderTest extends FunSuite {
   test("tokenize parses strings correctly") {
     new Program {
       assert(tokenize(concat) == List(
-        OpenParens, Atom("defn"), Atom("greet"), OpenParens, Atom("name"), CloseParens, OpenParens, Atom("+"), StringToken("""hello, \""""), Atom("name"), StringToken("""\""""), CloseParens, CloseParens
+        ListToken(List(
+          Atom("defn"),
+          Atom("greet"),
+          ListToken(List(
+            Atom("name")
+          )),
+          ListToken(List(
+            Atom("+"),
+            StringToken("""hello, \""""),
+            Atom("name"),
+            StringToken("""\"""")
+          ))
+        ))
       ))
     }
   }
 
   test("tokenize parses a multiline function") {
     new Program {
-      assert(tokenize(program) == List (
-        OpenParens, Atom("defn"), Atom("loop"), OpenParens, OpenParens, Atom("n"), NumberToken(1.0), CloseParens, CloseParens,
-        OpenParens, Atom("if"), OpenParens, Atom(">"), Atom("n"), NumberToken(10.0), CloseParens,
-        OpenParensLit, CloseParens,
-        OpenParens, Atom("cons"), Atom("n"),
-        OpenParens, Atom("loop"), OpenParens, Atom("+"), Atom("n"), NumberToken(1.0), CloseParens, CloseParens, CloseParens, CloseParens, CloseParens
+      assert(tokenize(program) == List(
+        ListToken(List(
+          Atom("defn"),
+          Atom("loop"),
+          ListToken(List(
+            ListToken(List(
+              Atom("n"),
+              NumberToken(1.0)
+            ))
+          )),
+          ListToken(List(
+            Atom("if"),
+            ListToken(List(
+              Atom(">"),
+              Atom("n"),
+              NumberToken(10.0)
+            )),
+            LitListToken(List()),
+            ListToken(List(
+              Atom("cons"),
+              Atom("n"),
+              ListToken(List(
+                Atom("loop"),
+                ListToken(List(
+                  Atom("+"),
+                  Atom("n"),
+                  NumberToken(1.0)
+                ))
+              ))
+            ))
+          ))
+        ))
       ))
     }
   }
