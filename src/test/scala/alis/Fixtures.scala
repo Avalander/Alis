@@ -12,6 +12,8 @@ object fixtures {
     |    (loop (+ n 1)))))
     """.stripMargin
     val concat = """(defn greet (name) (+ "hello, \"" name "\""))"""
+
+    // Arithmetic
     val simpleSum = List(ListToken(List(Atom("+"), NumberToken(1.0), NumberToken(2.0))))
     val simpleSub = List(ListToken(List(Atom("-"), NumberToken(1.0), NumberToken(2.0))))
     val simpleMul = List(ListToken(List(Atom("*"), NumberToken(1.0), NumberToken(2.0))))
@@ -42,6 +44,21 @@ object fixtures {
         Atom("+"),
         NumberToken(2.0),
         Atom("*pi*")
+      ))
+    )
+
+    // Define
+    val simpleDefine = List(
+      ListToken(List(
+        Atom("define"),
+        Atom("radius"),
+        NumberToken(3.0)
+      )),
+      ListToken(List(
+        Atom("*"),
+        NumberToken(2.0),
+        Atom("*pi*"),
+        Atom("radius")
       ))
     )
   }

@@ -43,4 +43,13 @@ class EvalTest extends FunSuite {
       assert(evalAst(pie, env) == List(NumberToken(math.Pi + 2.0)))
     }
   }
+
+  test("evalAst with simple define") {
+    new Program with WithEnv {
+      assert(evalAst(simpleDefine, env) == List(
+        LitListToken(Nil),
+        NumberToken(2 * math.Pi * 3.0)
+      ))
+    }
+  }
 }

@@ -1,11 +1,15 @@
 package alis
 
+import scala.collection.mutable.Map
+
 import token._
 
 class Env {
   type Func = (List[Token]) => Token
 
   private val env = Map[String, Func](
+    "define" -> define,
+    "print" -> print_,
     "+" -> add,
     "-" -> sub,
     "*" -> mul,
@@ -62,5 +66,34 @@ class Env {
     NumberToken(result)
   }
 
+  private def define: Func = (xs: List[Token]) =>
+    xs match {
+      case List(Atom(x), t) =>
+        if (env.contains(x)) throw new AssignmentError(s"Name $x already bound")
+        else {
+          env += x -> value(t)
+          LitListToken(Nil)
+        }
+      case List(a, b) => throw new SyntaxError(s"Syntax Error: invalid identifier $a")
+      case _          => throw new SyntaxError(s"Syntax Error: define takes two arguments, ${xs.size} provided")
+    }
+  
+  private def print_ : Func = (xs: List[Token]) => {
+    println(show(xs.head))
+    LitListToken(Nil)
+  }
+
+  private def show (t: Token): String =
+    t match {
+      case BooleanToken(value) => value.toString
+      case NumberToken(value)  => value.toString
+      case StringToken(value)  => value
+      case ListToken(xs)       => "(" + (xs map show) mkString " " + ")"
+      case LitListToken(xs)    => "(" + (xs map show) mkString " " + ")"
+      case _                   => "'()"
+    }
+
   class SyntaxError(private val message: String) extends Exception(message)
+
+  class AssignmentError(private val message: String) extends Exception(message)
 }
