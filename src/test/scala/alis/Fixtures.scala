@@ -37,6 +37,13 @@ object fixtures {
         ))
       ))
     )
+    val pie = List(
+      ListToken(List(
+        Atom("+"),
+        NumberToken(2.0),
+        Atom("*pi*")
+      ))
+    )
   }
 
   trait WithEnv {

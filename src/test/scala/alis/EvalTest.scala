@@ -37,4 +37,10 @@ class EvalTest extends FunSuite {
       assert(evalAst(arithmetic, env) == List(NumberToken(13.0)))
     }
   }
+
+  test("evalAst looks up symbols") {
+    new Program with WithEnv {
+      assert(evalAst(pie, env) == List(NumberToken(math.Pi + 2.0)))
+    }
+  }
 }
