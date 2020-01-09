@@ -1,5 +1,7 @@
 package alis
 
+import token._
+
 object fixtures {
   trait Program {
     val function = "(defn add (a b) (+ a b))"
@@ -10,5 +12,34 @@ object fixtures {
     |    (loop (+ n 1)))))
     """.stripMargin
     val concat = """(defn greet (name) (+ "hello, \"" name "\""))"""
+    val simpleSum = List(ListToken(List(Atom("+"), NumberToken(1.0), NumberToken(2.0))))
+    val simpleSub = List(ListToken(List(Atom("-"), NumberToken(1.0), NumberToken(2.0))))
+    val simpleMul = List(ListToken(List(Atom("*"), NumberToken(1.0), NumberToken(2.0))))
+    val simpleDiv = List(ListToken(List(Atom("/"), NumberToken(1.0), NumberToken(2.0))))
+    // (+ 2 (* 3 3) (/ 4 (- 4 2)))
+    val arithmetic = List(
+      ListToken(List(
+        Atom("+"),
+        NumberToken(2.0),
+        ListToken(List(
+          Atom("*"),
+          NumberToken(3.0),
+          NumberToken(3.0)
+        )),
+        ListToken(List(
+          Atom("/"),
+          NumberToken(4.0),
+          ListToken(List(
+            Atom("-"),
+            NumberToken(4.0),
+            NumberToken(2.0)
+          ))
+        ))
+      ))
+    )
+  }
+
+  trait WithEnv {
+    val env = new Env
   }
 }
